@@ -9,10 +9,6 @@
         "file": "IMG_7403.jpeg",
         "modified": "2026-10-23T15:04:24.000Z"
       },
-      "img-7404": {
-        "file": "IMG_7404.jpeg",
-        "modified": "2026-10-23T15:04:18.000Z"
-      },
       "img-7406": {
         "file": "IMG_7406.jpeg",
         "modified": "2026-10-23T15:04:28.000Z"
@@ -20,15 +16,29 @@
       "img-7407": {
         "file": "IMG_7407.jpeg",
         "modified": "2026-10-23T15:04:08.000Z"
+      },
+      "okt23": {
+        "file": "okt23.jpg",
+        "modified": "2026-11-01T09:26:58.498Z"
+      },
+      "okt23-2": {
+        "file": "okt23_2.jpg",
+        "modified": "2026-11-01T09:27:11.260Z"
+      },
+      "okt23-3": {
+        "file": "okt23_3.jpg",
+        "modified": "2026-11-01T09:27:22.256Z"
       }
     },
     "folder": "okt_23",
     "order": [
       "7054",
       "img-7403",
-      "img-7404",
       "img-7406",
-      "img-7407"
+      "img-7407",
+      "okt23",
+      "okt23-2",
+      "okt23-3"
     ]
   }
 }
