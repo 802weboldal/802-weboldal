@@ -786,33 +786,41 @@ document.querySelectorAll('a[href^="mailto:"]').forEach(link => {
 });
 
 // ==========================================================
-// Person cards: clicking the e-mail address or the phone number copies it (instead of opening the
-// mail or phone app) and shows "Másolva!" in its place for a moment; the card's pop-up does not open.
-// If copying fails, the link works as usual.
+// Person cards and program cards: clicking the e-mail address (on person cards the phone number
+// too) copies it instead of opening the mail or phone app, and shows "Másolva!" in its place for
+// a moment; the card's pop-up does not open. If copying fails, the link works as usual.
+// Delegated, so it also works on the program cards copied into the pop-up and below the calendar.
 // ==========================================================
-document.querySelectorAll('.person-card > a.person-email, .person-card > a.person-phone').forEach(link => {
-  link.title = 'Kattints a másoláshoz';
-  link.addEventListener('click', async event => {
-    event.preventDefault();
-    if (link.classList.contains('is-copied')) return;
-    const href = link.getAttribute('href');
-    const value = link.classList.contains('person-email')
-      ? href.slice('mailto:'.length).split('?')[0]
-      : link.textContent.trim();
-    if (!await copyToClipboard(value)) {
-      window.location.href = href;
-      return;
-    }
-    const original = link.innerHTML;
-    link.style.minWidth = `${link.offsetWidth}px`;   // the shorter text must not move the card's lines
-    link.classList.add('is-copied');
-    link.textContent = 'Másolva!';
-    setTimeout(() => {
-      link.innerHTML = original;
-      link.classList.remove('is-copied');
-      link.style.minWidth = '';
-    }, 1500);
-  });
+const COPY_LINKS = '.person-card > a.person-email, .person-card > a.person-phone, .news-card a[href^="mailto:"]';
+
+document.querySelectorAll(COPY_LINKS).forEach(link => { link.title = 'Kattints a másoláshoz'; });
+
+document.addEventListener('click', async event => {
+  const link = event.target.closest?.(COPY_LINKS);
+  if (!link) return;
+  event.preventDefault();
+  if (link.classList.contains('is-copied')) return;
+  const href = link.getAttribute('href');
+  const value = href.startsWith('mailto:')
+    ? href.slice('mailto:'.length).split('?')[0]
+    : link.textContent.trim();
+  if (!await copyToClipboard(value)) {
+    window.location.href = href;
+    return;
+  }
+  const original = link.innerHTML;
+  // the shorter text must not move the card's lines (a wrapped address keeps its two lines)
+  const { width, height } = link.getBoundingClientRect();
+  link.style.display = 'inline-block';
+  link.style.minWidth = `${width}px`;
+  link.style.minHeight = `${height}px`;
+  link.classList.add('is-copied');
+  link.textContent = 'Másolva!';
+  setTimeout(() => {
+    link.innerHTML = original;
+    link.classList.remove('is-copied');
+    link.style.display = link.style.minWidth = link.style.minHeight = '';
+  }, 1500);
 });
 
 // ==========================================================
@@ -847,9 +855,11 @@ document.querySelectorAll('.person-card > a.person-email, .person-card > a.perso
   const gallery = overlay.querySelector('.program-modal-gallery');
   const closeButton = overlay.querySelector('.program-modal-close');
   let opener = null;
+  let byKeyboard = false;   // opened with Enter / Space: then the focus goes back to the card on closing
 
-  function open(card, imageIndex = -1) {
+  function open(card, imageIndex = -1, keyboard = false) {
     opener = card;
+    byKeyboard = keyboard;
     // the texts and buttons (without the card's image strip); the share button works from the .news-card
     text.replaceChildren(...[...card.children]
       .filter(child => !child.classList.contains('news-gallery'))
@@ -913,7 +923,8 @@ document.querySelectorAll('.person-card > a.person-email, .person-card > a.perso
     overlay.hidden = true;
     gallery.replaceChildren();
     document.body.style.overflow = '';
-    opener?.focus();
+    if (byKeyboard) opener?.focus();
+    else document.activeElement?.blur();   // no focus left on the card (no frame around it)
     if (fromHistory !== true) modalHistory.closed(close);
   }
 
@@ -935,7 +946,7 @@ document.querySelectorAll('.person-card > a.person-email, .person-card > a.perso
     const card = event.target.closest?.(CARDS);
     if (card && event.target === card && (event.key === 'Enter' || event.key === ' ')) {
       event.preventDefault();
-      open(card);
+      open(card, -1, true);
     }
   });
 
@@ -1042,7 +1053,8 @@ document.querySelectorAll('.person-card > a.person-email, .person-card > a.perso
     overlay.hidden = true;
     videoStage.replaceChildren();   // the video stops
     document.body.style.overflow = document.querySelector('.program-modal:not([hidden])') ? 'hidden' : '';
-    opener?.focus();
+    if (byKeyboard) opener?.focus();
+    else document.activeElement?.blur();   // no focus left on the card (no frame around it)
     if (fromHistory !== true) modalHistory.closed(close);
   }
 
@@ -1284,7 +1296,8 @@ document.addEventListener('click', async event => {
     if (overlay.hidden) return;
     overlay.hidden = true;
     document.body.style.overflow = '';
-    opener?.focus();
+    if (byKeyboard) opener?.focus();
+    else document.activeElement?.blur();   // no focus left on the card (no frame around it)
     if (fromHistory !== true) modalHistory.closed(close);
   }
 

@@ -568,7 +568,8 @@ img {
 
 /* clicked on the card: copied, "Másolva!" for a moment (script.js) */
 .person-card > .person-email.is-copied,
-.person-card > .person-phone.is-copied {
+.person-card > .person-phone.is-copied,
+.news-card a.is-copied {
   color: var(--color-primary);
   font-weight: bold;
 }
@@ -1307,8 +1308,9 @@ section[id] {
   box-shadow: 0 12px 24px rgba(35, 63, 42, 0.12);
 }
 
-/* no focus frame on the card (it gets the focus back after its pop-up is closed) */
-.news-card:focus {
+/* no focus frame on the card (with the keyboard it gets the focus back after its pop-up is closed) */
+.news-card:focus,
+.news-card:focus-visible {
   outline: none;
 }
 
