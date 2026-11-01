@@ -160,7 +160,7 @@ def test_display_date(start, end, expected):
 
 
 @pytest.mark.parametrize('name, email, phone, expected', [
-    ('Kiss Anna', 'a@x.hu', '', 'Kiss Anna, <a class="inline-link" href="mailto:a@x.hu">a@x.hu</a>'),
+    ('Kiss Anna', 'a@x.hu', '', 'Kiss Anna, <a class="inline-link" href="mailto:a@x.hu">a<wbr>@x.hu</a>'),
     ('', '', '06301234567', '<a class="inline-link" href="tel:+36301234567">+36 30 123 4567</a>'),
     ('Anna', '06301234567', '', 'Anna<br>\n            <a class="inline-link" href="tel:+36301234567">+36 30 123 4567</a>'),
     ('<b>Anna</b>', '', '', '&lt;b&gt;Anna&lt;/b&gt;'),

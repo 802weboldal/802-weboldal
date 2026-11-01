@@ -898,6 +898,9 @@ section[id] {
 
 .news-grid > .news-card {
   flex: 0 0 calc((100% - 48px) / 3);
+  /* a long e-mail address must not widen the card (then the last one would be cut off) */
+  min-width: 0;
+  overflow-wrap: anywhere;
   scroll-snap-align: start;
 }
 
@@ -1302,6 +1305,11 @@ section[id] {
 .news-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(35, 63, 42, 0.12);
+}
+
+/* no focus frame on the card (it gets the focus back after its pop-up is closed) */
+.news-card:focus {
+  outline: none;
 }
 
 .news-meta {

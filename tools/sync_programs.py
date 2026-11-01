@@ -129,7 +129,9 @@ def contact_html(name, email, phone):
         email, phone = '', email
     first = [html.escape(name)] if name else []
     if email and EMAIL.fullmatch(email):
-        first.append(f'<a class="inline-link" href="mailto:{html.escape(email, quote=True)}">{html.escape(email)}</a>')
+        # a long address may wrap before the @ (and not in the middle of a word)
+        shown = html.escape(email).replace('@', '<wbr>@')
+        first.append(f'<a class="inline-link" href="mailto:{html.escape(email, quote=True)}">{shown}</a>')
     elif email:
         first.append(html.escape(email))
     text = ', '.join(first)
