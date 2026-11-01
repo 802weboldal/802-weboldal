@@ -1858,14 +1858,9 @@ body:has(.main-nav.open) .upcoming-tab {
   }
 }
 
-/* Highlight of the card arriving from the tab on the Programok page */
+/* the card arriving from the home page tab (#id) is not hidden under the fixed header */
 .news-card {
   scroll-margin-top: 90px;
-}
-
-.news-card:target {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px var(--color-highlight);
 }
 
 
