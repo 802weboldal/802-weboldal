@@ -1408,7 +1408,15 @@ document.addEventListener('click', async event => {
       media.className = 'camp-media';
       if (index % 2 === 1) media.style.cssText = '--col1:54%;--col2:56%;--overlap:-10%';
 
-      if (blockImages.length === 3) {
+      if (blockImages[0].hasAttribute('data-lead')) {
+        // a tall image on the left, the rest in a column next to it (as in the Tábor page's flag block)
+        [blockImages.slice(0, 1), blockImages.slice(1)].forEach(list => {
+          const col = document.createElement('div');
+          col.className = 'camp-col';
+          list.forEach(img => col.append(img));
+          media.append(col);
+        });
+      } else if (blockImages.length === 3) {
         // 3 images: one staggered column, slightly overlapping (not two columns)
         media.classList.add('camp-media-3');
         blockImages.forEach(img => media.append(img));
