@@ -147,6 +147,12 @@ def test_check_query_and_encoded_links(tmp_path, monkeypatch):
     assert check(tmp_path, monkeypatch, html, files=('Belépési.pdf',)) == []
 
 
+def test_check_root_relative_links(tmp_path, monkeypatch):
+    html = GOOD.replace('kep.webp', '/kep.webp?v=1"><script src="/nincs.js"></script><img src="x')
+    assert check(tmp_path, monkeypatch, html, files=('kep.webp', 'x')) == [
+        'programok.html: hiányzó fájlra mutató hivatkozás: /nincs.js']
+
+
 def test_check_page_links_without_extension(tmp_path, monkeypatch):
     html = GOOD.replace('kep.webp', 'kep.webp"><a href="programok#a"><a href="./"><a href="penzugyek#tagdij')
     assert check(tmp_path, monkeypatch, html) == ['programok.html: hiányzó fájlra mutató hivatkozás: penzugyek#tagdij']

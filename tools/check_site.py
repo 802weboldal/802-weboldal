@@ -77,7 +77,8 @@ def check_page(path):
         if re.match(r'(?:https?:|mailto:|tel:|webcal:|data:|//|javascript:)', link):
             continue
         target, _, anchor = link.partition('#')
-        target = urllib.parse.unquote(target.split('?')[0])
+        # a leading "/" means the site root (the repo root), not the file system root
+        target = urllib.parse.unquote(target.split('?')[0]).lstrip('/')
         # pages are linked without ".html" (GitHub Pages serves "programok" from programok.html)
         if target and not any(os.path.exists(os.path.join(ROOT, target + ext)) for ext in ('', '.html')):
             problems.append(f'hiányzó fájlra mutató hivatkozás: {link}')
